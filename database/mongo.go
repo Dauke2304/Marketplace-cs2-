@@ -12,28 +12,30 @@ import (
 
 var Client *mongo.Client
 
-// ConnectDB initializes the MongoDB connection
-func ConnectDB() {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-
+// InitDB MongoDB connection
+func InitDB() error {
+	uri := "mongodb://localhost:27017"
+	clientOptions := options.Client().ApplyURI(uri)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err := mongo.Connect(ctx, clientOptions)
+	var err error
+	Client, err = mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
+		return fmt.Errorf("failed to connect to MongoDB: %v", err)
 	}
 
-	// Ping the database to ensure connection is established
-	err = client.Ping(ctx, nil)
+	// Ping the database to verify the connection
+	err = Client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatalf("MongoDB connection ping failed: %v", err)
+		return fmt.Errorf("failed to ping MongoDB: %v", err)
 	}
 
-	fmt.Println("Connected to MongoDB!")
-	Client = client
+	log.Println("Connected to MongoDB!")
+	return nil
 }
 
-func GetCollection(collectionName string) *mongo.Collection {
-	return Client.Database("cs2_skins_marketplace").Collection(collectionName)
+// GetCollection returns a MongoDB collection
+func GetCollection(dbName, collectionName string) *mongo.Collection {
+	return Client.Database(dbName).Collection(collectionName)
 }
