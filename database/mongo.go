@@ -12,7 +12,6 @@ import (
 
 var Client *mongo.Client
 
-// ConnectDB initializes the MongoDB connection
 func ConnectDB() {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 
@@ -21,13 +20,12 @@ func ConnectDB() {
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
+		log.Fatalf("Failed connection: %v", err)
 	}
 
-	// Ping the database to ensure connection is established
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatalf("MongoDB connection ping failed: %v", err)
+		log.Fatalf("Ping connection: %v", err)
 	}
 
 	fmt.Println("Connected to MongoDB!")
