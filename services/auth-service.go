@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -59,7 +60,8 @@ func ValidateAuthorization(r *http.Request) error {
 		return fmt.Errorf("auth error: invalid session token")
 	}
 
-	csrfTokenHeader := r.Header.Get("X-CSRF-Token")
+	csrfTokenHeader, _ := url.QueryUnescape(r.Header.Get("X-CSRF-Token"))
+	fmt.Println(csrfTokenHeader)
 	if csrfTokenHeader != user.CSRFToken || csrfTokenHeader == "" {
 		fmt.Println("csrf bug")
 		fmt.Println(csrfTokenHeader)
