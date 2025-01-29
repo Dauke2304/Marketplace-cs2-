@@ -35,7 +35,6 @@ func InitDB() error {
 	return nil
 }
 
-// GetCollection returns a MongoDB collection
 func GetCollection(dbName, collectionName string) *mongo.Collection {
 	return Client.Database(dbName).Collection(collectionName)
 }
