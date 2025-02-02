@@ -35,10 +35,3 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func Logout(w http.ResponseWriter, r *http.Request) {
 	services.HandleLogout(w, r)
 }
-
-func MainPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend", "index.html"))
-		return
-	}
-}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS2 Skins Marketplace</title>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div>
+      <a href="/">CS2 Skins Marketplace</a>
+    </div>
+    <ul>
+      <li><a href="/about">About Us</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li>
+        <input type="text" placeholder="Search skins..." />
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div>
+    <h2>Available Skins</h2>
+    <ul>
+      {{range .Skins}}
+        <li>{{.}}</li>
+      {{else}}
+        <li>No skins available.</li>
+      {{end}}
+    </ul>
+  </div>
+</body>
+</html>
