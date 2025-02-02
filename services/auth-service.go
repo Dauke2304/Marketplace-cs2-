@@ -163,6 +163,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(time.Hour * 24),
 		HttpOnly: false,
 	})
+	http.Redirect(w, r, "/main", http.StatusSeeOther)
 	fmt.Fprintf(w, "Logged in, %s", username)
 }
 

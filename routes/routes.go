@@ -10,4 +10,5 @@ func InitRoutes() {
 	http.HandleFunc("/login", controllers.Login)
 	http.HandleFunc("/logout", controllers.Logout)
 	http.HandleFunc("/protected", controllers.Protected)
+	http.HandleFunc("/main", controllers.MainPage)
 }
