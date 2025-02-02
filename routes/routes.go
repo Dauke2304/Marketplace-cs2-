@@ -11,6 +11,7 @@ func InitRoutes() {
 	http.HandleFunc("/logout", controllers.Logout)
 	http.HandleFunc("/protected", controllers.Protected)
 	http.HandleFunc("/main", controllers.MainPage)
+	http.HandleFunc("/profile", controllers.ProfilePage)
 
 	// For CSS an JS
 	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\style"))))
