@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -163,6 +164,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(time.Hour * 24),
 		HttpOnly: false,
 	})
+	http.Redirect(w, r, "/main", http.StatusSeeOther)
 	fmt.Fprintf(w, "Logged in, %s", username)
 }
 

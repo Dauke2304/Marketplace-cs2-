@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Username }}&#39;s Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="/styleTemplates/profile.css">
+</head>
+<body>
+
+  <header class="bg-dark py-3 text-center">
+    <h1 class="text-success">
+        CS <a href="/main" class="highlight-link">Marketplace</a>
+    </h1>
+    <nav class="nav justify-content-center">
+        <a class="nav-link text-white" href="/main">Home</a>
+        <a class="nav-link text-white" href="/profile">Profile</a>
+        <a class="nav-link text-white" href="/about">About</a>
+        <a class="nav-link text-white" href="/contacts">Contact</a>
+    </nav>
+</header>
+
+    <div class="container mt-4">
+        <div class="profile-container text-center">
+            <div class="profile-header">
+                <img src="/img/{{ .Avatar }}" alt="Avatar" class="avatar rounded-circle">
+                <h1 class="mt-2">{{ .Username }}</h1>
+            </div>
+            
+            <h2 class="mt-4">Owned Skins</h2>
+            <div id="item-container" class="row row-cols-1 row-cols-md-3 g-4">
+                {{ range .Skins }}
+                <div class="col">
+                    <div class="card bg-dark text-white shadow">
+                        <img src="/img/{{ .Image }}" class="card-img-top" alt="{{ .Name }}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ .Name }}</h5>
+                            <p class="card-text">Price: ${{ .Price }}</p>
+                        </div>
+                    </div>
+                </div>
+                {{ else }}
+                <p class="text-muted text-center">No items available.</p>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

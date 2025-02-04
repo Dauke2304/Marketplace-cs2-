@@ -4,15 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - CS2 Skins Marketplace</title>
+<<<<<<< HEAD:public/login.html
   <link rel="stylesheet" href="style.css">
+=======
+  <link rel="stylesheet" href="style/login.css">
+>>>>>>> frontend:frontend/login.html
 </head>
 <body>
   <div class="auth-container">
     <h1>Login</h1>
-    <form id="login-form">
+    <form id="login-form" method="post">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
@@ -20,7 +24,7 @@
       </div>
       <button type="submit" class="btn">Login</button>
     </form>
-    <p>Don't have an account? <a href="register.html">Register here</a></p>
+    <p>Don't have an account? <a href="register">Register here</a></p>
   </div>
 
 </body>
