@@ -9,8 +9,8 @@ body {
 }
 
 h1 {
-  color: #00ff44;
-  background-color: #e91e63;
+  color: white;
+  background-color: white;
   border-radius: 20px;
   padding: 20px;
   font-size: 36px;
@@ -19,7 +19,7 @@ h1 {
 }
 
 .highlight-link {
-  color: #ff00ae;
+  color: white;
   text-decoration: none;
   transition: color 0.3s ease;
 }
