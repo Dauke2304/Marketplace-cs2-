@@ -3,7 +3,7 @@ package services
 import (
 	"Marketplace-cs2-/database"
 	"Marketplace-cs2-/models"
-	"context"
+	"Marketplace-cs2-/repositories"
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
@@ -35,19 +35,20 @@ func generateToken(length int) string {
 	if _, err := rand.Read(bytes); err != nil {
 		fmt.Printf("Failed to generate token: %v", err)
 	}
-	return base64.URLEncoding.EncodeToString(bytes)
+	return base64.RawURLEncoding.EncodeToString(bytes)
+
 }
 
 func ValidateAuthorization(r *http.Request) error {
-	username := r.FormValue("username")
+	database.InitDB()
+	rep := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
+	fmt.Println("from validate")
+	cookie, err := r.Cookie("sessiontoken")
+	if err != nil {
+		return fmt.Errorf("auth error: sessiontoken not found")
+	}
 
-	database.ConnectDB()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	collection := database.GetCollection("users")
-
-	var user models.User
-	err := collection.FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	user, err := rep.GetUserBySessionToken(cookie.Value)
 	if err != nil {
 		fmt.Println("not found")
 		return fmt.Errorf("auth error: user not found")
@@ -92,19 +93,19 @@ func HandleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	database.ConnectDB()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	collection := database.GetCollection("users")
+	database.InitDB()
+	rep := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
 
-	existingUser := collection.FindOne(ctx, bson.M{"username": username})
-	if existingUser.Err() == nil {
+	existingUser, err := rep.GetUserByUsername(username)
+	if err == nil {
 		http.Error(w, "User already exists", http.StatusConflict)
+		fmt.Println("user already exist: ", existingUser.Username)
 		return
 	}
+
 	hashedPassword, _ := hashPassword(password)
 	user := models.User{Username: username, Password: hashedPassword}
-	collection.InsertOne(ctx, user)
+	rep.CreateUser(user)
 	fmt.Println("User Registered!")
 	fmt.Fprintf(w, "User registered")
 }
@@ -118,15 +119,13 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	database.ConnectDB()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	collection := database.GetCollection("users")
+	database.InitDB()
+	rep := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
 
-	var user models.User
-	err := collection.FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	user, err := rep.GetUserByUsername(username)
 	if err != nil {
-		http.Error(w, "User not found", http.StatusUnauthorized)
+		http.Error(w, "User not found", http.StatusNotFound)
+		fmt.Println("user not found")
 		return
 	}
 
@@ -138,13 +137,9 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	sessiontoken := generateToken(32)
 	csrftoken := generateToken(32)
 
-	_, err = collection.UpdateOne(
-		ctx,
-		bson.M{"username": username},
-		bson.M{"$set": bson.M{
-			"sessiontoken": sessiontoken,
-			"csrftoken":    csrftoken,
-		}},
+	err = rep.UpdateUser(
+		user.ID,
+		bson.M{"sessiontoken": sessiontoken, "csrftoken": csrftoken},
 	)
 	if err != nil {
 		http.Error(w, "Failed to store session or CSRF token", http.StatusInternalServerError)
@@ -165,7 +160,6 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: false,
 	})
 	http.Redirect(w, r, "/main", http.StatusSeeOther)
-	fmt.Fprintf(w, "Logged in, %s", username)
 }
 
 func HandleLogout(w http.ResponseWriter, r *http.Request) {
@@ -174,32 +168,40 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid method", err)
 		return
 	}
+	database.InitDB()
+	rep := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
 
-	// Get the username from the request or session (e.g., from a cookie)
-	username := r.FormValue("username")
+	cookie, err := r.Cookie("sessiontoken")
+	if err != nil {
+		http.Error(w, "Session token not found", http.StatusUnauthorized)
+		return
+	}
+
+	user, err := rep.GetUserBySessionToken(cookie.Value)
+	if err != nil {
+		http.Error(w, "Invalid session token", http.StatusUnauthorized)
+		return
+	}
+
+	username := user.Username
 	if username == "" {
 		http.Error(w, "Username not found", http.StatusUnauthorized)
 		return
 	}
+	fmt.Println(user.Username)
+	fmt.Println(user.SessionToken)
+	fmt.Println(user.ID)
 
-	// Connect to the database and clear the session and CSRF tokens
-	database.ConnectDB()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	collection := database.GetCollection("users")
-
-	_, err := collection.UpdateOne(
-		ctx,
-		bson.M{"username": username},
+	er := rep.UpdateUser(
+		user.ID,
 		bson.M{
-			"$set": bson.M{
-				"sessiontoken": "",
-				"csrftoken":    "",
-			},
+			"sessiontoken": "",
+			"csrftoken":    "",
 		},
 	)
-	if err != nil {
+	if er != nil {
 		http.Error(w, "Failed to clear tokens from database", http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
@@ -219,7 +221,7 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		Expires:  time.Now().Add(-time.Hour), // Set expiration to the past to effectively delete it
 	})
-	fmt.Fprintf(w, "Logged out, %s", username)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func HandleProtected(w http.ResponseWriter, r *http.Request) {
@@ -235,6 +237,20 @@ func HandleProtected(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("From handle protected 1")
 		return
 	}
-	username := r.FormValue("username")
-	fmt.Fprintf(w, "Welcome, %s", username)
+
+	database.InitDB()
+	rep := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
+	cookie, err := r.Cookie("sessiontoken")
+	if err != nil {
+		http.Error(w, "Session token not found", http.StatusUnauthorized)
+		return
+	}
+
+	user, err := rep.GetUserBySessionToken(cookie.Value)
+	if err != nil {
+		http.Error(w, "Invalid session token", http.StatusUnauthorized)
+		return
+	}
+	username := user.Username
+	fmt.Println(username)
 }

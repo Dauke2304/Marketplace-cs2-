@@ -47,6 +47,26 @@ func (r *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
+func (r *UserRepository) GetUserByUsername(username string) (*models.User, error) {
+	var user models.User
+	filter := bson.M{"username": username}
+	err := r.collection.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepository) GetUserBySessionToken(sessiontoken string) (*models.User, error) {
+	var user models.User
+	filter := bson.M{"sessiontoken": sessiontoken}
+	err := r.collection.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func (r *UserRepository) GetUserBySteamID(steamID string) (*models.User, error) {
 	var user models.User
 	filter := bson.M{"steam_id": steamID}
