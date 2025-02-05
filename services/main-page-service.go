@@ -33,7 +33,7 @@ func HandleMainPage(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	templatePath := filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\index.html")
+	templatePath := filepath.Join("C:\\Users\\20fut\\Desktop\\ADVANCED PROGRAMMING\\Marketplace-cs2-\\frontend\\templates\\index.html")
 	// Parse the template
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {

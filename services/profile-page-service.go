@@ -19,7 +19,7 @@ type ProfileData struct {
 
 func HandleProfilePage(w http.ResponseWriter, r *http.Request) {
 
-	tmpl := template.Must(template.ParseFiles("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\profile.html"))
+	tmpl := template.Must(template.ParseFiles("C:\\Users\\20fut\\Desktop\\ADVANCED PROGRAMMING\\Marketplace-cs2-\\frontend\\templates\\profile.html"))
 
 	data := ProfileData{
 		Username: "WITOX",
