@@ -96,3 +96,7 @@ function removeFromCart(index) {
   cartItems.splice(index, 1);
   updateCart();
 }
+
+
+
+

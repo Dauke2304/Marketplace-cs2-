@@ -3,6 +3,7 @@ package repositories
 import (
 	"Marketplace-cs2-/models"
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -101,4 +102,33 @@ func (r *UserRepository) GetAllUsers() ([]models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *UserRepository) GetUserByIDCtx(sessCtx context.Context, userID primitive.ObjectID) (*models.User, error) {
+	// 1️⃣ Ensure context is not expired
+	if err := sessCtx.Err(); err != nil {
+		fmt.Println("context error")
+		return nil, fmt.Errorf("context error: %w", err)
+	}
+
+	var user models.User
+	err := r.collection.FindOne(sessCtx, bson.M{"_id": userID}).Decode(&user)
+
+	// 2️⃣ Handle "no user found" case separately
+	if err == mongo.ErrNoDocuments {
+		fmt.Println("no user")
+		return nil, nil // No error, just no user
+	} else if err != nil {
+		return nil, fmt.Errorf("database error: %w", err) // Wrap other errors
+	}
+
+	return &user, nil
+}
+
+func (r *UserRepository) UpdateUserBalance(sessCtx context.Context, userID primitive.ObjectID, newBalance float64) error {
+	filter := bson.M{"_id": userID}
+	update := bson.M{"$set": bson.M{"balance": newBalance}}
+
+	_, err := r.collection.UpdateOne(sessCtx, filter, update)
+	return err
 }

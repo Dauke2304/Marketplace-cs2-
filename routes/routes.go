@@ -12,9 +12,10 @@ func InitRoutes() {
 	http.HandleFunc("/protected", controllers.Protected)
 	http.HandleFunc("/main", controllers.MainPage)
 	http.HandleFunc("/profile", controllers.ProfilePage)
+	http.HandleFunc("/buy-skin", controllers.BuySkin)
 
 	// For CSS an JS
-	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("./frontend/style"))))
-	http.Handle("/styleTemplates/", http.StripPrefix("/styleTemplates/", http.FileServer(http.Dir("./frontend/templates/styleTemplates"))))
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./frontend/templates/js"))))
+	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\style"))))
+	http.Handle("/styleTemplates/", http.StripPrefix("/styleTemplates/", http.FileServer(http.Dir("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\styleTemplates"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\js"))))
 }

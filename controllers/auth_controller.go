@@ -8,7 +8,7 @@ import (
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("C:\\Users\\20fut\\Desktop\\ADVANCED PROGRAMMING\\Marketplace-cs2-\\frontend", "register.html"))
+		http.ServeFile(w, r, filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend", "register.html"))
 		services.HandleRegister(w, r)
 		return
 	}
@@ -21,7 +21,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("C:\\Users\\20fut\\Desktop\\ADVANCED PROGRAMMING\\Marketplace-cs2-\\frontend", "login.html"))
+		http.ServeFile(w, r, filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend", "login.html"))
 		services.HandleLogin(w, r)
 		return
 	}
