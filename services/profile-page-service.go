@@ -3,22 +3,26 @@ package services
 import (
 	"Marketplace-cs2-/database"
 	"Marketplace-cs2-/repositories"
+	"fmt"
 	"net/http"
 	"text/template"
 )
 
 type Skin struct {
-	Name  string
-	Price float64
-	Image string
+	ID        string
+	Name      string
+	Price     float64
+	Image     string
+	CSRFToken string
 }
 
 type ProfileData struct {
-	Username string
-	SteamID  string
-	Email    string
-	Balance  float64
-	Skins    []Skin
+	Username  string
+	SteamID   string
+	Email     string
+	Balance   float64
+	Skins     []Skin
+	CSRFToken string
 }
 
 func HandleProfilePage(w http.ResponseWriter, r *http.Request) {
@@ -52,6 +56,7 @@ func HandleProfilePage(w http.ResponseWriter, r *http.Request) {
 	var userSkins []Skin
 	for _, skin := range skins {
 		userSkins = append(userSkins, Skin{
+			ID:    skin.ID.Hex(),
 			Name:  skin.Name,
 			Price: skin.Price,
 			Image: skin.Image,
@@ -60,13 +65,15 @@ func HandleProfilePage(w http.ResponseWriter, r *http.Request) {
 
 	// Prepare template data
 	data := ProfileData{
-		Username: user.Username,
-		SteamID:  user.SteamID,
-		Email:    user.Email,
-		Balance:  user.Balance,
-		Skins:    userSkins,
+		Username:  user.Username,
+		SteamID:   user.SteamID,
+		Email:     user.Email,
+		Balance:   user.Balance,
+		Skins:     userSkins,
+		CSRFToken: user.CSRFToken,
 	}
-
+	fmt.Println("debug profile service......")
+	fmt.Println(data)
 	// Load and parse template
 	tmpl := template.Must(template.ParseFiles("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\profile.html"))
 

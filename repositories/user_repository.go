@@ -105,7 +105,7 @@ func (r *UserRepository) GetAllUsers() ([]models.User, error) {
 }
 
 func (r *UserRepository) GetUserByIDCtx(sessCtx context.Context, userID primitive.ObjectID) (*models.User, error) {
-	// 1️⃣ Ensure context is not expired
+	// Ensure context is not expired
 	if err := sessCtx.Err(); err != nil {
 		fmt.Println("context error")
 		return nil, fmt.Errorf("context error: %w", err)
@@ -114,7 +114,7 @@ func (r *UserRepository) GetUserByIDCtx(sessCtx context.Context, userID primitiv
 	var user models.User
 	err := r.collection.FindOne(sessCtx, bson.M{"_id": userID}).Decode(&user)
 
-	// 2️⃣ Handle "no user found" case separately
+	// 2 Handle "no user found" case separately
 	if err == mongo.ErrNoDocuments {
 		fmt.Println("no user")
 		return nil, nil // No error, just no user

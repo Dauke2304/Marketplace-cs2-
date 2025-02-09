@@ -116,6 +116,29 @@ func (r *SkinRepository) UpdateSkinOwner(sessCtx context.Context, skinID primiti
 	return err
 }
 
+func (r *SkinRepository) ToggleIsListed(skinID primitive.ObjectID, isListed bool) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	update := bson.M{"$set": bson.M{"is_listed": isListed}}
+
+	_, err := r.collection.UpdateOne(ctx, bson.M{"_id": skinID}, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *SkinRepository) ToggleIsListedctx(ctx context.Context, skinID primitive.ObjectID, isListed bool) error {
+	update := bson.M{"$set": bson.M{"is_listed": isListed}}
+
+	_, err := r.collection.UpdateOne(ctx, bson.M{"_id": skinID}, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *SkinRepository) TransferSkinOwnership(skinID string, buyerID string, price float64) error {
 	// Convert string IDs to ObjectIDs
 	objSkinID, err := primitive.ObjectIDFromHex(skinID)
@@ -178,6 +201,10 @@ func (r *SkinRepository) TransferSkinOwnership(skinID string, buyerID string, pr
 			fmt.Println("skin owner not found")
 			return nil, errors.New("skin owner not found")
 		}
+		if buyer.ID == skin.OwnerID {
+			fmt.Println("buyer is already the owner of this skin")
+			return nil, errors.New("buyer is already the owner of this skin")
+		}
 
 		// Check buyer's balance
 		if buyer.Balance < price {
@@ -203,6 +230,11 @@ func (r *SkinRepository) TransferSkinOwnership(skinID string, buyerID string, pr
 		if err != nil {
 			fmt.Println("error updating skin owner: %w")
 			return nil, fmt.Errorf("error updating skin owner: %w", err)
+		}
+
+		err1 := r.ToggleIsListedctx(ctx, objSkinID, false) // Set is_listed to false
+		if err1 != nil {
+			fmt.Println("Failed to update is_listed:", err)
 		}
 
 		return nil, nil

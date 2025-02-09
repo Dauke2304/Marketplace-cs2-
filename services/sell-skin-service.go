@@ -4,39 +4,25 @@ import (
 	"Marketplace-cs2-/database"
 	"Marketplace-cs2-/repositories"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"sync"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var mu sync.Mutex
-
-func HandleBuySkin(w http.ResponseWriter, r *http.Request) {
+func HandleSellSkin(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	defer mu.Unlock()
+	fmt.Println("Debug 0....................")
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
-
+	fmt.Println("Debug 1....................")
 	ValidateAuthorization(r)
+	fmt.Println("Debug 2....................")
 	database.InitDB()
 	rep := repositories.NewSkinRepository(database.Client.Database("cs2_skins_marketplace"))
-	repUser := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
-
-	cookie, err := r.Cookie("sessiontoken")
-	if err != nil {
-		http.Error(w, "Session token not found", http.StatusUnauthorized)
-		return
-	}
-	// Get user from session token
-	user, err := repUser.GetUserBySessionToken(cookie.Value)
-	if err != nil {
-		http.Error(w, "Invalid session token", http.StatusUnauthorized)
-		return
-	}
-
 	var skinID string
 	if r.Header.Get("Content-Type") == "application/json" {
 		var data map[string]string
@@ -44,7 +30,7 @@ func HandleBuySkin(w http.ResponseWriter, r *http.Request) {
 			skinID = data["skinID"]
 		}
 	}
-
+	fmt.Println("Debug 4....................")
 	if skinID == "" {
 		if err := r.ParseForm(); err == nil {
 			skinID = r.FormValue("skinID")
@@ -67,19 +53,9 @@ func HandleBuySkin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Skin not found", http.StatusNotFound)
 		return
 	}
-
-	if user.Balance < skin.Price {
-		http.Error(w, "Insufficient balance", http.StatusForbidden)
-		return
+	err1 := rep.ToggleIsListed(objID, true) // Set is_listed to false
+	if err1 != nil {
+		fmt.Println("Failed to update is_listed:", err)
 	}
-
-	// 6️Process the purchase
-	err = rep.TransferSkinOwnership(skinID, user.ID.Hex(), skin.Price)
-	if err != nil {
-		http.Error(w, "Transaction failed", http.StatusInternalServerError)
-		return
-	}
-	// 7️Redirect to refresh the page
 	http.Redirect(w, r, "/main", http.StatusSeeOther)
-
 }

@@ -3,7 +3,6 @@ package services
 import (
 	"Marketplace-cs2-/database"
 	"Marketplace-cs2-/repositories"
-	"fmt"
 	"net/http"
 	"path/filepath"
 	"text/template"
@@ -41,8 +40,7 @@ func HandleMainPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid session token", http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("FROM MAIN SERVICE")
-	fmt.Println(user.CSRFToken)
+
 	skins, err := rep.GetListedSkins()
 	if err != nil {
 		http.Error(w, "Failed to retrieve skins", http.StatusInternalServerError)

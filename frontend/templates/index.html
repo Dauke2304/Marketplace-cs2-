@@ -61,9 +61,9 @@
         event.preventDefault(); 
 
         const formData = new FormData(form);
-        const data = { skinID: formData.get("skinID") }; // ✅ Теперь `skinID` — это строка
+        const data = { skinID: formData.get("skinID") }; // 
         console.log("Отправляемые данные:", [...formData]); // Проверка значений
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // ✅ Добавили получение CSRF-токена
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); 
 
         fetch(form.action, {
             method: "POST",
@@ -73,15 +73,15 @@
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.text())  // <-- Изменили json() на text()
+        .then(response => response.text())
         .then(data => {
             console.log("Ответ сервера:", data);
             try {
-                const jsonData = JSON.parse(data); // Попытка разобрать JSON
+                const jsonData = JSON.parse(data);
                 alert(jsonData.message);
             } catch (error) {
                 console.error("Ошибка разбора JSON:", error);
-                alert("Ошибка: " + data); // Выведем текст ошибки от сервера
+                alert("Ошибка: " + data);
             }
         })
         .catch(error => console.error("Ошибка:", error));

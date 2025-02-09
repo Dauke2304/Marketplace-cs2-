@@ -13,6 +13,7 @@ func InitRoutes() {
 	http.HandleFunc("/main", controllers.MainPage)
 	http.HandleFunc("/profile", controllers.ProfilePage)
 	http.HandleFunc("/buy-skin", controllers.BuySkin)
+	http.HandleFunc("/sell-skin", controllers.SellSkin)
 
 	// For CSS an JS
 	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\style"))))
