@@ -11,4 +11,5 @@ type User struct {
 	Balance      float64            `bson:"balance" json:"balance"`
 	SessionToken string             `bson:"sessiontoken"`
 	CSRFToken    string             `bson:"csrftoken"`
+	IsAdmin      bool               `bson:"is_admin" json:"is_admin"`
 }
