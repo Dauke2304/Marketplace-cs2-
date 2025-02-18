@@ -9,6 +9,7 @@ import (
 )
 
 func HandleAdminPanel(w http.ResponseWriter, r *http.Request) {
+
 	db := database.Client.Database("cs2_skins_marketplace")
 
 	userRepo := repositories.NewUserRepository(db)
