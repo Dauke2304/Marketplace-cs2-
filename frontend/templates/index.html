@@ -43,7 +43,7 @@
                       <p class="card-text">Price: ${{.Price}}</p>
                       <form action="/buy-skin" method="POST">
                         <input type="hidden" name="skinID" value="{{.ID}}">
-                        <button type="submit" class="btn btn-success">Buy Now {{.ID}}</button>
+                        <button type="submit" class="btn btn-success">Buy Now</button>
                     </form>
                   </div>
               </div>
@@ -56,13 +56,13 @@
   
     </main>
     <script>
-      document.querySelectorAll("form").forEach(form => {
+document.querySelectorAll("form").forEach(form => {
     form.addEventListener("submit", function (event) {
         event.preventDefault(); 
 
         const formData = new FormData(form);
-        const data = { skinID: formData.get("skinID") }; // 
-        console.log("Отправляемые данные:", [...formData]); // Проверка значений
+        const data = { skinID: formData.get("skinID") };
+        console.log("Отправляемые данные:", [...formData]); 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); 
 
         fetch(form.action, {
@@ -78,15 +78,20 @@
             console.log("Ответ сервера:", data);
             try {
                 const jsonData = JSON.parse(data);
-                alert(jsonData.message);
+                if (jsonData.error) {
+                    alert(jsonData.error); // Если есть ошибка, показываем её
+                } else {
+                    alert("Confirm action"); // Если ошибки нет, показываем "Confirm action"
+                }
             } catch (error) {
                 console.error("Ошибка разбора JSON:", error);
-                alert("Ошибка: " + data);
+                alert("Confirm action ", error);
             }
         })
         .catch(error => console.error("Ошибка:", error));
     });
 });
+
 
 
     </script>
