@@ -6,5 +6,6 @@ import (
 )
 
 func AdminPanel(w http.ResponseWriter, r *http.Request) {
+
 	services.HandleAdminPanel(w, r)
 }

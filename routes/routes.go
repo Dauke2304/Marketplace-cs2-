@@ -17,7 +17,7 @@ func InitRoutes() {
 	http.HandleFunc("/sell-skin", controllers.SellSkin)
 	http.HandleFunc("/about", controllers.AboutPage)
 	http.HandleFunc("/contact", controllers.ContactPage)
-	http.HandleFunc("/admin", middleware.AdminOnly(controllers.AdminPanel))
+	http.HandleFunc("/admin", middleware.AdminMiddleware(controllers.AdminPanel))
 
 	// For CSS an JS
 	http.Handle("/style/", http.StripPrefix("/style/", http.FileServer(http.Dir("../frontend/style"))))

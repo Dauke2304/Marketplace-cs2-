@@ -159,6 +159,12 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(time.Hour * 24),
 		HttpOnly: false,
 	})
+
+	if user.IsAdmin {
+		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		return
+	}
+
 	http.Redirect(w, r, "/main", http.StatusSeeOther)
 }
 
