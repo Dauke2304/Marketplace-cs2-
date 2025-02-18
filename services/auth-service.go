@@ -77,7 +77,6 @@ func ValidateAuthorization(r *http.Request) error {
 	// If both tokens are valid, return nil (authentication is successful)
 	return nil
 }
-
 func HandleRegister(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		err := http.StatusMethodNotAllowed
@@ -253,4 +252,18 @@ func HandleProtected(w http.ResponseWriter, r *http.Request) {
 	}
 	username := user.Username
 	fmt.Println(username)
+}
+func CreateAdminUser() {
+	db := database.Client.Database("cs2_skins_marketplace")
+	userRepo := repositories.NewUserRepository(db)
+
+	adminUser, _ := userRepo.GetUserByUsername("admin123")
+	if adminUser == nil {
+		hashedPassword, _ := hashPassword("admin123")
+		userRepo.CreateUser(models.User{
+			Username: "admin",
+			Password: hashedPassword,
+			Balance:  0,
+		})
+	}
 }

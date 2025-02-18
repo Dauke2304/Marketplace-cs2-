@@ -1,0 +1,121 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  h1 {
+    color: rgb(194, 34, 125);
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+  
+  /* Contact Us Page Styles */
+  header {
+    background-color: #282846;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  header h1 {
+    color:  rgb(194, 34, 125);
+    font-size: 32px;
+  }
+  
+  form {
+    margin: 40px auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: #2f2f50;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  label {
+    display: block;
+    color: #f0f0f0;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    border: 1px solid #9c27b0;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  button {
+    background-color: #9c27b0;
+    color: #f0f0f0;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #7b1fa2;
+    color: #f0f0f0;
+    border: 1px solid #7b1fa2;
+  }
+  
+  /* About Us Page Styles */
+  .container {
+    padding: 40px;
+    background-color: #2f2f50;
+    text-align: center;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .container h1 {
+    color: #ffffff;
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .container p {
+    font-size: 18px;
+    color: #a9a9a9;
+    line-height: 1.6;
+  }
+  
+  /* Footer Styles */
+  footer {
+    padding: 20px;
+    background-color: #282846;
+    text-align: center;
+    color: #a9a9a9;
+  }
+  
+  footer a {
+    color: #9c27b0;
+    text-decoration: none;
+  }
+  
+  footer a:hover {
+    text-decoration: underline;
+  }
+  
+  footer p {
+    color: rgb(128, 126, 126);
+  }
+  

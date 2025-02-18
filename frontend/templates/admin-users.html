@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="../style/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h1>User Management</h1>
+        <table class="admin-table">
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Balance</th>
+                <th>Actions</th>
+            </tr>
+            {{range .}}
+            <tr>
+                <td>{{.Username}}</td>
+                <td>{{.Email}}</td>
+                <td>${{.Balance}}</td>
+                <td>
+                    <button class="btn-danger" onclick="deleteUser('{{.ID.Hex}}')">Delete</button>
+                </td>
+            </tr>
+            {{end}}
+        </table>
+    </div>
+</body>
+</html>

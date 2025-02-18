@@ -16,7 +16,7 @@ func ValidateAdmin(r *http.Request) bool {
 	userRepo := repositories.NewUserRepository(database.Client.Database("cs2_skins_marketplace"))
 	user, _ := userRepo.GetUserBySessionToken(cookie.Value)
 
-	return user.Username == "admin" // Special admin username
+	return user.Username == "admin123"
 }
 
 func HandleAdminDashboard(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +74,6 @@ func HandleDeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Implementation using userRepo.DeleteUser()
 }
 
 func HandleDeleteSkin(w http.ResponseWriter, r *http.Request) {
@@ -83,5 +82,4 @@ func HandleDeleteSkin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Implementation using skinRepo.DeleteSkin()
 }
