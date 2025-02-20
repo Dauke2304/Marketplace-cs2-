@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styleTemplates/profile.css">
 </head>
-<body>
-    <header class="bg-dark py-3 text-center">
-        <h1 class="text-success">
+<body class="bg-gray-900 text-white">
+    <header class="bg-gray-800 py-3 text-center">
+        <h1 class="text-green-400 text-3xl font-bold">
             <a href="/main" class="text-indigo-400 hover:underline">Vault</a>
         </h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="/main">Home</a>
-            <a class="nav-link text-white" href="/profile">Profile</a>
-            <a class="nav-link text-white" href="/about">About</a>
-            <a class="nav-link text-white" href="/contact">Contact</a>
+        <nav class="flex justify-center space-x-6 mt-3">
+            <a class="text-white hover:text-indigo-400" href="/main">Home</a>
+            <a class="text-white hover:text-indigo-400" href="/profile">Profile</a>
+            <a class="text-white hover:text-indigo-400" href="/about">About</a>
+            <a class="text-white hover:text-indigo-400" href="/contact">Contact</a>
         </nav>
     </header>
 
-    <main class="container my-5">
-        <h2>About Us</h2>
-        <p>Welcome to CS2 Marketplace - your ultimate destination for trading CS2 skins!</p>
+    <main class="container mx-auto my-8 p-4 text-center">
+        <h2 class="text-3xl font-bold mb-6">About Us</h2>
+        <p class="text-gray-300 mb-4">Welcome to <span class="text-indigo-400 font-bold">Vault</span> – the ultimate destination for CS2 skin trading. Our platform is built for gamers, by gamers, providing a secure and seamless experience for buying, selling, and managing your in-game inventory.</p>
+        <p class="text-gray-300 mb-4">At <span class="text-indigo-400 font-bold">Vault</span>, we understand the value of your skins and ensure fair pricing, secure transactions, and a user-friendly interface. Whether you’re looking for rare collectibles or quick trades, we’ve got you covered.</p>
+        <p class="text-gray-300">Join our growing community and take your CS2 trading experience to the next level!</p>
     </main>
 </body>
 </html>
