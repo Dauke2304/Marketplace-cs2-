@@ -6,15 +6,13 @@ Marketplace CS2 is a Go-based marketplace application designed for Counter-Strik
 ## Features
 - User authentication and account management
 - Item listing with images and descriptions
-- Secure transactions between buyers and sellers
 - Admin panel for managing listings and users
 - Search and filter functionality for easy navigation
 
 ## Installation
 ### Prerequisites
 - Go (latest stable version)
-- PostgreSQL (or any supported database)
-- Git
+- MongoDB
 
 ### Steps
 1. Download .zip file
@@ -22,17 +20,14 @@ Marketplace CS2 is a Go-based marketplace application designed for Counter-Strik
    ```sh
    go mod tidy
    ```
-3. Run database migrations:
-   ```sh
-   go run migrate.go
-   ```
-4. Start the application:
+3. Start the application:
    ```sh
    go run main.go
    ```
-## Project structure
 
-cs2-skins-marketplace/
+## Project structure
+```
+marketplace-cs2-/
 ├── cmd/          # Main application entry
 ├── config/       # Configuration files
 ├── controllers/  # HTTP controllers
@@ -41,7 +36,7 @@ cs2-skins-marketplace/
 ├── repositories/ # Database operations
 ├── services/     # Business logic
 └── frontend/     # Frontend assets
-
+```
 ### Implementation Notes:
 
 1. Security: The admin panel checks for both valid session and the "admin" username
@@ -62,16 +57,7 @@ The admin panel uses your existing repositories (UserRepository, SkinRepository,
 3. Complete transactions securely.
 4. Manage your account and listings via the dashboard.
 
-## Contribution
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a new branch (`feature-branch`)
-3. Commit your changes.
-4. Push to your fork and create a pull request.
-
-## License
-Under AITU 
-
-## Contact
-+7 707 740 52 80
-
+## Authors
+* Zhasulan Abdigaliyev
+* Dauletkhan Bulanbayev
+* Ernar Zhaksybaiyev
