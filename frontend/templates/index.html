@@ -34,10 +34,10 @@
 
         <div id="item-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {{range .Items}}
-            <div class="bg-gray-800 p-4 rounded-lg shadow-lg" data-price="{{.Price}}">
+            <div class="item-card bg-gray-800 p-4 rounded-lg shadow-lg" data-price="{{.Price}}">
                 <img src="{{.Image}}" class="w-full h-48 object-cover rounded-lg" alt="{{.Name}}">
                 <div class="text-center mt-4">
-                    <h5 class="text-xl font-bold">{{.Name}}</h5>
+                    <h5 class="card-title text-xl font-bold">{{.Name}}</h5>
                     <p class="text-gray-300">Price: ${{.Price}}</p>
                     <form action="/buy-skin" method="POST">
                         <input type="hidden" name="skinID" value="{{.ID}}">
