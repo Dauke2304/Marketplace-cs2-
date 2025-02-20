@@ -75,7 +75,7 @@ func HandleProfilePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("debug profile service......")
 	fmt.Println(data)
 	// Load and parse template
-	tmpl := template.Must(template.ParseFiles("../frontend/templates/profile.html"))
+	tmpl := template.Must(template.ParseFiles("./frontend/templates/profile.html"))
 
 	// Render template
 	err = tmpl.Execute(w, data)
