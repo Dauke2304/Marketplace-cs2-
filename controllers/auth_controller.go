@@ -8,7 +8,7 @@ import (
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("../frontend", "register.html"))
+		http.ServeFile(w, r, filepath.Join("./frontend", "register.html"))
 		services.HandleRegister(w, r)
 		return
 	}
@@ -21,7 +21,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("../frontend", "login.html"))
+		http.ServeFile(w, r, filepath.Join("./frontend", "login.html"))
 		services.HandleLogin(w, r)
 		return
 	}
