@@ -60,4 +60,4 @@ The admin panel uses your existing repositories (UserRepository, SkinRepository,
 ## Authors
 * Zhasulan Abdigaliyev
 * Dauletkhan Bulanbayev
-* Ernar Zhaksybaiyev
+* Ernar Zhaksybaev
