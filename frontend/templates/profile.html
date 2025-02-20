@@ -62,7 +62,7 @@
 
         const formData = new FormData(form);
         const data = { skinID: formData.get("skinID") };
-        console.log("Отправляемые данные:", [...formData]); // Проверка значений
+        console.log("Sending data:", [...formData]); // Проверка значений
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); 
 
         fetch(form.action, {
@@ -75,16 +75,16 @@
         })
         .then(response => response.text())
         .then(data => {
-            console.log("Ответ сервера:", data);
+            console.log("Server response:", data);
             try {
                 const jsonData = JSON.parse(data);
                 alert(jsonData.message);
             } catch (error) {
-                console.error("Ошибка разбора JSON:", error);
+                console.error("Response error JSON:", error);
                 alert("Confirm action", data, error);
             }
         })
-        .catch(error => console.error("Ошибка:", error));
+        .catch(error => console.error("Error:", error));
     });
 });
 </script>
