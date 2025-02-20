@@ -43,8 +43,10 @@
                       <p class="card-text">Price: ${{.Price}}</p>
                       <form action="/buy-skin" method="POST">
                         <input type="hidden" name="skinID" value="{{.ID}}">
+                        <input type="hidden" id="cartItemName" value="{{.Name}}">
+                        <input type="hidden" id="cartItemPrice" value="{{.Price}}">
                         <button type="submit" class="btn btn-success">Buy Now</button>
-                    </form>
+                        </form>
                   </div>
               </div>
           </div>
@@ -53,8 +55,8 @@
             <p>No items available.</p>
             {{end}}
         </div>
-  
     </main>
+
     <script>
 document.querySelectorAll("form").forEach(form => {
     form.addEventListener("submit", function (event) {

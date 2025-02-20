@@ -1,4 +1,3 @@
-
 let priceSortAsc = true;
 let nameSortAsc = true;
 let cartItems = [];
@@ -96,7 +95,3 @@ function removeFromCart(index) {
   cartItems.splice(index, 1);
   updateCart();
 }
-
-
-
-
