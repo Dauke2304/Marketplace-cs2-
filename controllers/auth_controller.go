@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"Marketplace-cs2-/services"
+	"fmt"
 	"net/http"
 	"path/filepath"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("../frontend", "register.html"))
+		http.ServeFile(w, r, filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend", "register.html"))
 		services.HandleRegister(w, r)
 		return
 	}
@@ -21,11 +22,14 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		http.ServeFile(w, r, filepath.Join("../frontend", "login.html"))
+		fmt.Println("1")
+		http.ServeFile(w, r, filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend", "login.html"))
 		services.HandleLogin(w, r)
 		return
 	}
+	fmt.Println("2")
 	if r.Method == http.MethodPost {
+		fmt.Println("3")
 		services.HandleLogin(w, r)
 		return
 	}
