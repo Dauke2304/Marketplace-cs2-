@@ -40,8 +40,3 @@ function sortItemsByName() {
   container.innerHTML = "";
   items.forEach(item => container.appendChild(item));
 }
-
-
-
-
-
