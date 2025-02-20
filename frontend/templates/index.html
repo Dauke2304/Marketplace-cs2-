@@ -5,98 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{.CSRFToken}}">
     <title>Main page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styleTemplates/index.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    
 </head>
 
-<body>
-    <header class="bg-dark py-3 text-center">
-        <h1 class="text-success">
-            CS <a href="/main" class="highlight-link">Marketplace</a>
+<body class="bg-gray-900 text-white">
+    <header class="bg-gray-800 py-3 text-center">
+        <h1 class="text-green-400 text-3xl font-bold">
+            CS <a href="/main" class="text-indigo-400 hover:underline">Marketplace</a>
         </h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="/home">Home</a>
-            <a class="nav-link text-white" href="/profile">Profile</a>
-            <a class="nav-link text-white" href="/about">About</a>
-            <a class="nav-link text-white" href="/contact">Contact</a>
+        <nav class="flex justify-center space-x-6 mt-3">
+            <a class="text-white hover:text-indigo-400" href="/home">Home</a>
+            <a class="text-white hover:text-indigo-400" href="/profile">Profile</a>
+            <a class="text-white hover:text-indigo-400" href="/about">About</a>
+            <a class="text-white hover:text-indigo-400" href="/contact">Contact</a>
         </nav>
     </header>
 
-    <main class="container my-5">
-        <div class="d-flex justify-content-between mb-3">
-            <input type="text" id="searchInput" class="form-control w-50" onkeyup="searchItems()" placeholder="Search for items..." />
-            <div>
-                <button class="btn btn-outline-light" onclick="sortItemsByPrice()">Sort by Price</button>
-                <button class="btn btn-outline-light" onclick="sortItemsByName()">Sort by Name (A-Z)</button>
+    <main class="container mx-auto my-8 p-4">
+        <div class="flex justify-between mb-6">
+            <input type="text" id="searchInput" class="w-1/2 p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" onkeyup="searchItems()" placeholder="Search for items..." />
+            <div class="space-x-3">
+                <button class="px-4 py-2 border border-gray-500 rounded-lg text-white hover:bg-gray-700" onclick="sortItemsByPrice()">Sort by Price</button>
+                <button class="px-4 py-2 border border-gray-500 rounded-lg text-white hover:bg-gray-700" onclick="sortItemsByName()">Sort by Name (A-Z)</button>
             </div>
         </div>
 
-        <div id="item-container" class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+        <div id="item-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {{range .Items}}
-            <div class="col item-card" data-price="{{.Price}}">
-              <div class="card bg-dark text-white shadow">
-                  <img src="{{.Image}}" class="card-img-top" alt="{{.Name}}">
-                  <div class="card-body text-center">
-                      <h5 class="card-title">{{.Name}}</h5>
-                      <p class="card-text">Price: ${{.Price}}</p>
-                      <form action="/buy-skin" method="POST">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-lg" data-price="{{.Price}}">
+                <img src="{{.Image}}" class="w-full h-48 object-cover rounded-lg" alt="{{.Name}}">
+                <div class="text-center mt-4">
+                    <h5 class="text-xl font-bold">{{.Name}}</h5>
+                    <p class="text-gray-300">Price: ${{.Price}}</p>
+                    <form action="/buy-skin" method="POST">
                         <input type="hidden" name="skinID" value="{{.ID}}">
-                        <button type="submit" class="btn btn-success">Buy Now</button>
+                        <button type="submit" class="mt-4 w-full p-3 bg-green-600 rounded-lg hover:bg-green-700 transition">Buy Now</button>
                     </form>
-                  </div>
-              </div>
-          </div>
-          
+                </div>
+            </div>
             {{else}}
-            <p>No items available.</p>
+            <p class="text-center text-gray-400">No items available.</p>
             {{end}}
         </div>
-  
     </main>
-    <script>
-document.querySelectorAll("form").forEach(form => {
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); 
 
-        const formData = new FormData(form);
-        const data = { skinID: formData.get("skinID") };
-        console.log("Отправляемые данные:", [...formData]); 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); 
-
-        fetch(form.action, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log("Ответ сервера:", data);
-            try {
-                const jsonData = JSON.parse(data);
-                if (jsonData.error) {
-                    alert(jsonData.error); // Если есть ошибка, показываем её
-                } else {
-                    alert("Confirm action"); // Если ошибки нет, показываем "Confirm action"
-                }
-            } catch (error) {
-                console.error("Ошибка разбора JSON:", error);
-                alert("Confirm action ", error);
-            }
-        })
-        .catch(error => console.error("Ошибка:", error));
-    });
-});
-
-
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
-    
 </body>
 </html>

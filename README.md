@@ -17,22 +17,16 @@ Marketplace CS2 is a Go-based marketplace application designed for Counter-Strik
 - Git
 
 ### Steps
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/yourusername/Marketplace-cs2-.git
-   cd Marketplace-cs2-
-   ```
+1. Download .zip file
 2. Install dependencies:
    ```sh
    go mod tidy
    ```
-3. Configure the environment variables:
-   - Copy `.env.example` to `.env` and update the database credentials.
-4. Run database migrations:
+3. Run database migrations:
    ```sh
    go run migrate.go
    ```
-5. Start the application:
+4. Start the application:
    ```sh
    go run main.go
    ```

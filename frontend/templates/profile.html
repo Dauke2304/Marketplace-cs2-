@@ -86,7 +86,7 @@
                 alert(jsonData.message);
             } catch (error) {
                 console.error("Ошибка разбора JSON:", error);
-                alert("Confirm action");
+                alert("Confirm action", data, error);
             }
         })
         .catch(error => console.error("Ошибка:", error));
