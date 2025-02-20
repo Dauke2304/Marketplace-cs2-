@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"Marketplace-cs2-/services"
+	"fmt"
 	"net/http"
 	"path/filepath"
 )
@@ -25,7 +26,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		services.HandleLogin(w, r)
 		return
 	}
+	fmt.Println("2")
 	if r.Method == http.MethodPost {
+		fmt.Println("3")
 		services.HandleLogin(w, r)
 		return
 	}
