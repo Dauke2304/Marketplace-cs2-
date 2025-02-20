@@ -4,36 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styleTemplates/index.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <header class="bg-dark py-3 text-center">
-        <h1 class="text-success">CS <a href="/main" class="highlight-link">Marketplace</a></h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="/main">Home</a>
-            <a class="nav-link text-white" href="/profile">Profile</a>
-            <a class="nav-link text-white" href="/about">About</a>
-            <a class="nav-link text-white" href="/contact">Contact</a>
+<body class="bg-gray-900 text-white">
+    <header class="bg-gray-800 py-3 text-center">
+        <h1 class="text-green-400 text-3xl font-bold">
+            <a href="/main" class="text-indigo-400 hover:underline">Vault</a>
+        </h1>
+        <nav class="flex justify-center space-x-6 mt-3">
+            <a class="text-white hover:text-indigo-400" href="/main">Home</a>
+            <a class="text-white hover:text-indigo-400" href="/profile">Profile</a>
+            <a class="text-white hover:text-indigo-400" href="/about">About</a>
+            <a class="text-white hover:text-indigo-400" href="/contact">Contact</a>
         </nav>
     </header>
 
-    <main class="container my-5">
-        <h2>Contact Us</h2>
-        <form action="/contact" method="POST">
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+    <main class="container mx-auto my-8 p-4">
+        <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
+        <form action="/contact" method="POST" class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium">Name</label>
+                <input type="text" id="name" name="name" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+            <div>
+                <label for="email" class="block text-sm font-medium">Email</label>
+                <input type="email" id="email" name="email" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
             </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+            <div>
+                <label for="message" class="block text-sm font-medium">Message</label>
+                <textarea id="message" name="message" rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="w-full p-3 bg-indigo-600 rounded-lg hover:bg-indigo-700 transition">Submit</button>
         </form>
     </main>
 </body>
