@@ -30,7 +30,7 @@ func HandleAdminPanel(w http.ResponseWriter, r *http.Request) {
 		Transactions: transactions,
 	}
 
-	tmpl := template.Must(template.ParseFiles("../frontend/templates/admin.html"))
+	tmpl := template.Must(template.ParseFiles("./frontend/templates/admin.html"))
 	tmpl.Execute(w, data)
 }
 func GetCurrentUser(r *http.Request) *models.User {

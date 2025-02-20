@@ -63,7 +63,7 @@ func HandleMainPage(w http.ResponseWriter, r *http.Request) {
 		CSRFToken: user.CSRFToken, // Pass the CSRF token globally
 	}
 
-	templatePath := filepath.Join("C:\\Users\\Ernar\\Desktop\\Marketplace-cs2-\\frontend\\templates\\index.html")
+	templatePath := filepath.Join("./frontend/templates/index.html")
 	tmpl, err := template.ParseFiles(templatePath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
