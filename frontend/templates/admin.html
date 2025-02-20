@@ -275,21 +275,11 @@
             new bootstrap.Modal(document.getElementById('addSkinModal')).show();
         }
 
-        function editUser(userId) {
-            // Implement edit functionality
-            console.log('Edit user:', userId);
-        }
-
         function deleteUser(userId) {
             if (confirm('Are you sure you want to delete this user?')) {
                 fetch(`/admin/users/${userId}`, { method: 'DELETE' })
                     .then(() => window.location.reload());
             }
-        }
-
-        function editSkin(skinId) {
-            // Implement edit functionality
-            console.log('Edit skin:', skinId);
         }
 
         function deleteSkin(skinId) {
@@ -352,6 +342,7 @@ function sortTable(tableId, columnIndex, dataType = 'text') {
 }
 // Add to existing script
 async function editUser(userId) {
+    console.log("Edit user triggered for:", userId);
     const response = await fetch(`/admin/users/${userId}`);
     const user = await response.json();
     

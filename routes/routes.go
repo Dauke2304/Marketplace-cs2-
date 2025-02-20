@@ -30,6 +30,8 @@ func InitRoutes() {
 	http.HandleFunc("/admin/users", services.HandleAddUser)
 	http.HandleFunc("/admin/users/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
+		case http.MethodGet:
+			services.HandleGetUser(w, r)
 		case http.MethodPut:
 			services.HandleUpdateUser(w, r)
 		case http.MethodDelete:
@@ -43,6 +45,8 @@ func InitRoutes() {
 	http.HandleFunc("/admin/skins", services.HandleAddSkin)
 	http.HandleFunc("/admin/skins/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
+		case http.MethodGet:
+			services.HandleGetSkin(w, r)
 		case http.MethodPut:
 			services.HandleUpdateSkin(w, r)
 		case http.MethodDelete:
