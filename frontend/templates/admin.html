@@ -5,6 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style/admin.css">
+    <style>
+        /* Admin Panel Styling */
+.admin-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.btn {
+    margin: 0 0.25rem;
+}
+
+.modal-content {
+    background: #2a2a2a;
+    color: #fff;
+}
+
+.modal-header {
+    border-bottom: 1px solid #444;
+}
+
+.modal-footer {
+    border-top: 1px solid #444;
+}
+.btn-sort {
+    color: #bb86fc;
+    padding: 0 0.3rem;
+    margin-left: 0.5rem;
+    border: 1px solid #bb86fc;
+}
+
+.btn-sort:hover {
+    background: #2d2d2d;
+}
+    </style>
 </head>
 <body>
     <header class="bg-dark py-3 text-center">
@@ -16,53 +64,336 @@
     </header>
 
     <main class="container my-5">
+        <!-- Users Section -->
         <h2>Users</h2>
-        <table class="table">
-            {{range .Users}}
-            <tr>
-                <td>{{.Username}}</td>
-                <td>{{.Email}}</td>
-                <td>{{.Balance}}</td>
-                <td>
-                    <form action="/admin/users/{{.ID.Hex}}" method="POST">
-                        <button type="submit" name="action" value="delete">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {{end}}
+        <div class="mb-3">
+            <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+        </div>
+        <table class="table table-striped" id="userTable">
+            <thead>
+                <tr>
+                    <th>
+                        Username 
+                        <button class="btn btn-sm btn-sort" onclick="sortTable('userTable', 0)">
+                            ↑↓
+                        </button>
+                    </th>
+                    <th>
+                        Balance 
+                        <button class="btn btn-sm btn-sort" onclick="sortTable('userTable', 2, 'currency')">
+                            ↑↓
+                        </button>
+                    </th>
+                    <!-- ... -->
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Users}}
+                <tr>
+                    <td>{{.Username}}</td>
+                    <td>{{.Email}}</td>
+                    <td>${{.Balance}}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUser('{{.ID.Hex}}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser('{{.ID.Hex}}')">Delete</button>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
         </table>
+        <button class="btn btn-primary" onclick="showAddUserModal()">Add User</button>
 
-        <h2>Skins</h2>
-        <table class="table">
-            {{range .Skins}}
-            <tr>
-                <td>{{.Name}}</td>
-                <td>{{.Price}}</td>
-                <td>{{.Rarity}}</td>
-                <td>
-                    <form action="/admin/skins/{{.ID.Hex}}" method="POST">
-                        <button type="submit" name="action" value="delete">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {{end}}
+        <!-- Skins Section -->
+        <h2 class="mt-5">Skins</h2>
+        <div class="mb-3">
+            <input type="text" id="skinSearch" class="form-control" placeholder="Search skins...">
+        </div>
+        <table class="table table-striped" id="skinTable">
+            <thead>
+                <tr>
+                    <th>
+                        Name 
+                        <button class="btn btn-sm btn-sort" onclick="sortTable('skinTable', 0)">
+                            ↑↓
+                        </button>
+                    </th>
+                    <th>
+                        Price 
+                        <button class="btn btn-sm btn-sort" onclick="sortTable('skinTable', 1, 'currency')">
+                            ↑↓
+                        </button>
+                    </th>
+                    <!-- ... -->
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Rarity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Skins}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td>${{.Price}}</td>
+                    <td>{{.Rarity}}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editSkin('{{.ID.Hex}}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteSkin('{{.ID.Hex}}')">Delete</button>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
         </table>
-
-        <h2>Transactions</h2>
-        <table class="table">
-            {{range .Transactions}}
-            <tr>
-                <td>{{.BuyerID}}</td>
-                <td>{{.SellerID}}</td>
-                <td>{{.Amount}}</td>
-                <td>{{.Date}}</td>
-            </tr>
-            {{end}}
-        </table>
+        <button class="btn btn-primary" onclick="showAddSkinModal()">Add Skin</button>
     </main>
 
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <input type="text" class="form-control mb-2" name="username" placeholder="Username" required>
+                        <input type="email" class="form-control mb-2" name="email" placeholder="Email" required>
+                        <input type="password" class="form-control mb-2" name="password" placeholder="Password" required>
+                        <input type="number" class="form-control mb-2" name="balance" placeholder="Balance" required>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Skin Modal -->
+    <div class="modal fade" id="addSkinModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Skin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSkinForm">
+                        <input type="text" class="form-control mb-2" name="name" placeholder="Name" required>
+                        <input type="number" class="form-control mb-2" name="price" placeholder="Price" required>
+                        <input type="text" class="form-control mb-2" name="rarity" placeholder="Rarity" required>
+                        <input type="text" class="form-control mb-2" name="image" placeholder="Image URL" required>
+                        <button type="submit" class="btn btn-primary">Add Skin</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editUserModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId" name="id">
+                        <input type="text" class="form-control mb-2" id="editUsername" name="username" required>
+                        <input type="email" class="form-control mb-2" id="editUserEmail" name="email" required>
+                        <input type="number" class="form-control mb-2" id="editUserBalance" name="balance" required>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editSkinModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Skin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editSkinForm">
+                        <input type="hidden" id="editSkinId" name="id">
+                        <input type="text" class="form-control mb-2" id="editSkinName" name="name" required>
+                        <input type="number" class="form-control mb-2" id="editSkinPrice" name="price" required>
+                        <input type="text" class="form-control mb-2" id="editSkinRarity" name="rarity" required>
+                        <input type="text" class="form-control mb-2" id="editSkinImage" name="image" required>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
     <form action="/logout" method="post">
         <button type="submit" class="btn btn-danger">Log out</button>
     </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Search functionality
+        document.getElementById('userSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTable('userTable', searchTerm);
+        });
+
+        document.getElementById('skinSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterTable('skinTable', searchTerm);
+        });
+
+        function filterTable(tableId, searchTerm) {
+            const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // CRUD operations
+        function showAddUserModal() {
+            new bootstrap.Modal(document.getElementById('addUserModal')).show();
+        }
+
+        function showAddSkinModal() {
+            new bootstrap.Modal(document.getElementById('addSkinModal')).show();
+        }
+
+        function editUser(userId) {
+            // Implement edit functionality
+            console.log('Edit user:', userId);
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                fetch(`/admin/users/${userId}`, { method: 'DELETE' })
+                    .then(() => window.location.reload());
+            }
+        }
+
+        function editSkin(skinId) {
+            // Implement edit functionality
+            console.log('Edit skin:', skinId);
+        }
+
+        function deleteSkin(skinId) {
+            if (confirm('Are you sure you want to delete this skin?')) {
+                fetch(`/admin/skins/${skinId}`, { method: 'DELETE' })
+                    .then(() => window.location.reload());
+            }
+        }
+
+        // Form submissions
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('/admin/users', {
+                method: 'POST',
+                body: formData
+            }).then(() => window.location.reload());
+        });
+
+        document.getElementById('addSkinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('/admin/skins', {
+                method: 'POST',
+                body: formData
+            }).then(() => window.location.reload());
+        });
+        // Add this to the existing script
+let sortDirections = {};
+
+function sortTable(tableId, columnIndex, dataType = 'text') {
+    const table = document.getElementById(tableId);
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    // Toggle sort direction
+    sortDirections[tableId] = sortDirections[tableId] || {};
+    const currentDirection = sortDirections[tableId][columnIndex] || 'asc';
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    sortDirections[tableId][columnIndex] = newDirection;
+
+    rows.sort((a, b) => {
+        const aValue = a.cells[columnIndex].textContent;
+        const bValue = b.cells[columnIndex].textContent;
+
+        if(dataType === 'currency') {
+            const numA = parseFloat(aValue.replace(/[^0-9.-]+/g,""));
+            const numB = parseFloat(bValue.replace(/[^0-9.-]+/g,""));
+            return newDirection === 'asc' ? numA - numB : numB - numA;
+        }
+        
+        return newDirection === 'asc' 
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+    });
+
+    // Clear and re-append sorted rows
+    while(tbody.firstChild) tbody.removeChild(tbody.firstChild);
+    rows.forEach(row => tbody.appendChild(row));
+}
+// Add to existing script
+async function editUser(userId) {
+    const response = await fetch(`/admin/users/${userId}`);
+    const user = await response.json();
+    
+    document.getElementById('editUserId').value = userId;
+    document.getElementById('editUsername').value = user.Username;
+    document.getElementById('editUserEmail').value = user.Email;
+    document.getElementById('editUserBalance').value = user.Balance;
+    
+    new bootstrap.Modal(document.getElementById('editUserModal')).show();
+}
+
+async function editSkin(skinId) {
+    const response = await fetch(`/admin/skins/${skinId}`);
+    const skin = await response.json();
+    
+    document.getElementById('editSkinId').value = skinId;
+    document.getElementById('editSkinName').value = skin.Name;
+    document.getElementById('editSkinPrice').value = skin.Price;
+    document.getElementById('editSkinRarity').value = skin.Rarity;
+    document.getElementById('editSkinImage').value = skin.Image;
+    
+    new bootstrap.Modal(document.getElementById('editSkinModal')).show();
+}
+
+// Form submissions
+document.getElementById('editUserForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(`/admin/users/${formData.get('id')}`, {
+        method: 'PUT',
+        body: formData
+    }).then(() => window.location.reload());
+});
+
+document.getElementById('editSkinForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(`/admin/skins/${formData.get('id')}`, {
+        method: 'PUT',
+        body: formData
+    }).then(() => window.location.reload());
+});
+    </script>
 </body>
 </html>
