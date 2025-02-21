@@ -11,7 +11,16 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 )
+
+func HashPassword(password string) (string, error) {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashed), nil
+}
 
 func HandleAdminPanel(w http.ResponseWriter, r *http.Request) {
 	db := database.Client.Database("cs2_skins_marketplace")
@@ -52,11 +61,16 @@ func HandleAddUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid balance format", http.StatusBadRequest)
 		return
 	}
-
+	password := r.FormValue("password")
+	hashedPassword, err := HashPassword(password)
+	if err != nil {
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+		return
+	}
 	user := models.User{
 		Username: r.FormValue("username"),
 		Email:    r.FormValue("email"),
-		Password: r.FormValue("password"),
+		Password: hashedPassword,
 		Balance:  balance,
 	}
 

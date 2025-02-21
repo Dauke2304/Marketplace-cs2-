@@ -5,53 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/style/admin.css">
     <style>
         /* Admin Panel Styling */
-.admin-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #1a1a1a;
-    border-radius: 8px;
-}
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
 
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #fff;
-}
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.05);
-}
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
 
-.btn {
-    margin: 0 0.25rem;
-}
+        .btn {
+            margin: 0 0.25rem;
+        }
 
-.modal-content {
-    background: #2a2a2a;
-    color: #fff;
-}
+        .modal-content {
+            background: #2a2a2a;
+            color: #fff;
+        }
 
-.modal-header {
-    border-bottom: 1px solid #444;
-}
+        .modal-header {
+            border-bottom: 1px solid #444;
+        }
 
-.modal-footer {
-    border-top: 1px solid #444;
-}
-.btn-sort {
-    color: #bb86fc;
-    padding: 0 0.3rem;
-    margin-left: 0.5rem;
-    border: 1px solid #bb86fc;
-}
+        .modal-footer {
+            border-top: 1px solid #444;
+        }
 
-.btn-sort:hover {
-    background: #2d2d2d;
-}
+        .btn-sort {
+            color: #bb86fc;
+            padding: 0 0.3rem;
+            margin-left: 0.5rem;
+            border: 1px solid #bb86fc;
+        }
+
+        .btn-sort:hover {
+            background: #2d2d2d;
+        }
+
+        /* Hide table initially */
+        .hidden-table {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -66,10 +71,11 @@
     <main class="container my-5">
         <!-- Users Section -->
         <h2>Users</h2>
+        <button class="btn btn-secondary mb-3" onclick="toggleTable('userTable', this)">Show Users</button>
         <div class="mb-3">
             <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
         </div>
-        <table class="table table-striped" id="userTable">
+        <table class="table table-striped hidden-table" id="userTable">
             <thead>
                 <tr>
                     <th>
@@ -113,10 +119,11 @@
 
         <!-- Skins Section -->
         <h2 class="mt-5">Skins</h2>
+        <button class="btn btn-secondary mb-3" onclick="toggleTable('skinTable', this)">Show Skins</button>
         <div class="mb-3">
             <input type="text" id="skinSearch" class="form-control" placeholder="Search skins...">
         </div>
-        <table class="table table-striped" id="skinTable">
+        <table class="table table-striped hidden-table" id="skinTable">
             <thead>
                 <tr>
                     <th>
@@ -200,6 +207,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit User Modal -->
     <div class="modal fade" id="editUserModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -219,6 +228,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Skin Modal -->
     <div class="modal fade" id="editSkinModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -247,6 +258,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Toggle table visibility
+        function toggleTable(tableId, button) {
+            const table = document.getElementById(tableId);
+            if (table.classList.contains('hidden-table')) {
+                table.classList.remove('hidden-table');
+                button.textContent = 'Hide Table';
+            } else {
+                table.classList.add('hidden-table');
+                button.textContent = 'Show Table';
+            }
+        }
+
         // Search functionality
         document.getElementById('userSearch').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
@@ -307,84 +330,85 @@
                 body: formData
             }).then(() => window.location.reload());
         });
-        // Add this to the existing script
-let sortDirections = {};
 
-function sortTable(tableId, columnIndex, dataType = 'text') {
-    const table = document.getElementById(tableId);
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    
-    // Toggle sort direction
-    sortDirections[tableId] = sortDirections[tableId] || {};
-    const currentDirection = sortDirections[tableId][columnIndex] || 'asc';
-    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
-    sortDirections[tableId][columnIndex] = newDirection;
+        // Sorting functionality
+        let sortDirections = {};
 
-    rows.sort((a, b) => {
-        const aValue = a.cells[columnIndex].textContent;
-        const bValue = b.cells[columnIndex].textContent;
+        function sortTable(tableId, columnIndex, dataType = 'text') {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            // Toggle sort direction
+            sortDirections[tableId] = sortDirections[tableId] || {};
+            const currentDirection = sortDirections[tableId][columnIndex] || 'asc';
+            const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+            sortDirections[tableId][columnIndex] = newDirection;
 
-        if(dataType === 'currency') {
-            const numA = parseFloat(aValue.replace(/[^0-9.-]+/g,""));
-            const numB = parseFloat(bValue.replace(/[^0-9.-]+/g,""));
-            return newDirection === 'asc' ? numA - numB : numB - numA;
+            rows.sort((a, b) => {
+                const aValue = a.cells[columnIndex].textContent;
+                const bValue = b.cells[columnIndex].textContent;
+
+                if(dataType === 'currency') {
+                    const numA = parseFloat(aValue.replace(/[^0-9.-]+/g,""));
+                    const numB = parseFloat(bValue.replace(/[^0-9.-]+/g,""));
+                    return newDirection === 'asc' ? numA - numB : numB - numA;
+                }
+                
+                return newDirection === 'asc' 
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            });
+
+            // Clear and re-append sorted rows
+            while(tbody.firstChild) tbody.removeChild(tbody.firstChild);
+            rows.forEach(row => tbody.appendChild(row));
         }
-        
-        return newDirection === 'asc' 
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-    });
 
-    // Clear and re-append sorted rows
-    while(tbody.firstChild) tbody.removeChild(tbody.firstChild);
-    rows.forEach(row => tbody.appendChild(row));
-}
-// Add to existing script
-async function editUser(userId) {
-    console.log("Edit user triggered for:", userId);
-    const response = await fetch(`/admin/users/${userId}`);
-    const user = await response.json();
-    
-    document.getElementById('editUserId').value = userId;
-    document.getElementById('editUsername').value = user.Username;
-    document.getElementById('editUserEmail').value = user.Email;
-    document.getElementById('editUserBalance').value = user.Balance;
-    
-    new bootstrap.Modal(document.getElementById('editUserModal')).show();
-}
+        // Edit User/Skin functionality
+        async function editUser(userId) {
+            const response = await fetch(`/admin/users/${userId}`);
+            const user = await response.json();
+            
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editUsername').value = user.Username;
+            document.getElementById('editUserEmail').value = user.Email;
+            document.getElementById('editUserBalance').value = user.Balance;
+            
+            new bootstrap.Modal(document.getElementById('editUserModal')).show();
+        }
 
-async function editSkin(skinId) {
-    const response = await fetch(`/admin/skins/${skinId}`);
-    const skin = await response.json();
-    
-    document.getElementById('editSkinId').value = skinId;
-    document.getElementById('editSkinName').value = skin.Name;
-    document.getElementById('editSkinPrice').value = skin.Price;
-    document.getElementById('editSkinRarity').value = skin.Rarity;
-    document.getElementById('editSkinImage').value = skin.Image;
-    
-    new bootstrap.Modal(document.getElementById('editSkinModal')).show();
-}
+        async function editSkin(skinId) {
+            const response = await fetch(`/admin/skins/${skinId}`);
+            const skin = await response.json();
+            
+            document.getElementById('editSkinId').value = skinId;
+            document.getElementById('editSkinName').value = skin.Name;
+            document.getElementById('editSkinPrice').value = skin.Price;
+            document.getElementById('editSkinRarity').value = skin.Rarity;
+            document.getElementById('editSkinImage').value = skin.Image;
+            
+            new bootstrap.Modal(document.getElementById('editSkinModal')).show();
+        }
 
-// Form submissions
-document.getElementById('editUserForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    fetch(`/admin/users/${formData.get('id')}`, {
-        method: 'PUT',
-        body: formData
-    }).then(() => window.location.reload());
-});
+        // Edit form submissions
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(`/admin/users/${formData.get('id')}`, {
+                method: 'PUT',
+                body: formData
+            }).then(() => window.location.reload());
+        });
 
-document.getElementById('editSkinForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    fetch(`/admin/skins/${formData.get('id')}`, {
-        method: 'PUT',
-        body: formData
-    }).then(() => window.location.reload());
-});
+        document.getElementById('editSkinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(`/admin/skins/${formData.get('id')}`, {
+                method: 'PUT',
+                body: formData
+            }).then(() => window.location.reload());
+        });
     </script>
 </body>
 </html>
